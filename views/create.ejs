@@ -1,0 +1,43 @@
+<%- include('partials/header'); -%>
+
+
+<div class="create-blog content">
+    <form>
+      <input type="hidden" id="email" name="email" value= <%= user.email %> >
+      <label for="title">Blog title:</label>
+      <input type="text" id="title" name="title" required>
+      <label for="snippet">Blog snippet:</label>
+      <input type="text" id="snippet" name="snippet" required>
+      <label for="body">Blog body:</label>
+      <textarea id="body" name="body" required></textarea>
+      <button>Submit</button>
+    </form>
+</div>
+
+<script>
+    const form = document.querySelector('form')
+
+    form.addEventListener('submit', async (e)=>{
+        e.preventDefault()
+        console.log('gaming test')
+        const email = form.email.value
+        const title = form.title.value
+        const snippet = form.snippet.value
+        const body = form.body.value
+        
+        console.log(email,title,snippet,body)
+        try {
+            const res = await fetch('/blog-create',{
+                method: 'post',
+                body: JSON.stringify({email,title,snippet,body}),
+                headers: {'Content-Type': 'application/json'}
+            }).then(()=>{
+                console.log('then fired')
+                location.assign('/')
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    })
+</script>
+<%- include('partials/footer'); -%>

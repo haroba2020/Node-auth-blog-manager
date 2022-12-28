@@ -18,8 +18,7 @@ userSchema = new mongoose.Schema({
     name:{
         type:String,
         required:[true, 'Please enter a username'],
-        unique:true
-    }
+        maxlength: [20,`username can't be over 20 characters`]    }
 })
 
 
@@ -48,6 +47,9 @@ userSchema.statics.login = async function(email,password){
     throw Error ('incorrect email')
 }
 
+userSchema.sort = async function(){
+    const userCollection = this.find() 
+}
 const User = mongoose.model('user',userSchema)
 
 module.exports = User

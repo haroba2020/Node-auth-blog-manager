@@ -1,4 +1,5 @@
 const User = require("../modules/Users");
+const Blog = require("../modules/Blogs");
 const jwt = require('jsonwebtoken')
 
 // error handler
@@ -34,6 +35,19 @@ module.exports.signup_get = (req,res)=>{
 module.exports.login_get = (req,res)=>{
     res.render('login');
 }
+module.exports.blog_create_get = (req,res)=>{
+    res.render('create');
+}
+module.exports.blog_details = (req,res) => {
+    const id = req.params.id
+    Blog.findById(id)
+    .then(result =>{
+        res.render('browser', {blog: result})
+    })
+    .catch(err =>{
+        res.status(404).render('404')
+    });
+}
 
 const maxAge = 3* 24 * 60 * 60 
 
@@ -52,6 +66,7 @@ module.exports.login_post = async (req,res)=>{
         res.status(200).json({user: user._id})
 
     }
+
     catch(err){
         const errors = ErrorHandler(err)
         res.status(400).json({ errors })
@@ -78,4 +93,39 @@ module.exports.signup_post = async (req,res)=>{
 module.exports.logout_get = (req, res) => {
     res.cookie('jwt', '',{maxAge: 1 })
     res.redirect('/')
+}
+
+module.exports.blog_index = (req,res) =>{
+    Blog.find().sort({ createdAt: -1})
+    .then((result)=>{
+        res.render('blog/index', {title: 'All blogs', blogs: result})
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+}
+
+module.exports.blog_create_post = (req, res) =>{
+    console.log(req.body)
+    const blog = new Blog(req.body)   
+    
+    blog.save()
+    .then((result)=>{
+        res.redirect('/')
+    })
+    .catch((err)=>{
+        console.log(err)
+        res.redirect('404')
+    })
+}
+module.exports.blog_delete = (req, res) =>{
+    const id = req.params.id
+
+    Blog.findByIdAndDelete(id)
+    .then(result=>{
+        res.json({ redirect: '/' });
+    })
+    .catch(err=>{
+        console.log(err)
+    })
 }

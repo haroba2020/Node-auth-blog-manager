@@ -2,10 +2,24 @@
 <header>
     <div class="header">
         <h1>Haroba blog manager</h1>
-        <h2>lorem</h2>
+        <h2>Your blogs</h2>
+        <h1 class="new-blog"> <a href="create">Make new blog</a></h1>
     </div>
-    
 </header>
 
+<br>
+
+<div class="blogs content">
+    <% if (blogs.length > 0) { %>
+    <% blogs.forEach(blog =>{ %> 
+        <a single href="/<%= blog._id %> ">
+            <h3 class="title"><%= blog.title %> </h3>
+            <p class="snippet"><%= blog.snippet %></p>
+        </a>
+        <% }) %> 
+   <% } else{%>
+    <p>there are no blogs to display</p>
+   <% } %>  
+</div>
 
 <%- include('partials/footer'); -%>
