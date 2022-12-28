@@ -30,20 +30,23 @@
         const name = form.name.value
         
         try {
+            //sender data som lager bruker
             const res = await fetch('/signup',{
                 method: 'post',
                 body: JSON.stringify({email,password,name}),
                 headers: {'Content-Type': 'application/json'}
             })
+            //venter på user data
             const data = await res.json()
             console.log(data)
 
-
+            // Error handler
             if(data.errors){
                 emailError.textContent = data.errors.email
                 passwordError.textContent = data.errors.password
                 nameError.textContent = data.errors.name
             }
+            //hvis det ble laget en user så redirect 
             if(data.user) {
                 location.assign('/')
             }

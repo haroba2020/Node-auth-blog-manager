@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const User = require("../modules/Users");
 
+//authentiser jwt token
 const requireAuth = (req,res,next) => {
 
     const token = req.cookies.jwt
@@ -22,6 +23,7 @@ const requireAuth = (req,res,next) => {
     }
 }
 
+//sjekk om brukeren har noen cookies for å sjekke om de har logget in
 const checkUser = (req,res,next)=>{
     const token = req.cookies.jwt
     if(token){

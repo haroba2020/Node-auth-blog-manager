@@ -12,6 +12,7 @@
     <button>Signup</button>
 </form>
 
+<!-- post request som tar verdiene til formen og sender det som en post request for å kunne authentisere bruker -->
 <script>
     const form = document.querySelector('form')
     const emailError = document.querySelector('.email.error')
@@ -24,6 +25,7 @@
         const email = form.email.value
         const password = form.password.value
 
+        //sender data for authentisering
         try {
             const res = await fetch('/login',{
                 method: 'post',
@@ -31,14 +33,16 @@
                 headers: {'Content-Type': 'application/json'}
             })
 
+            //venter på data
             const data = await res.json()
             console.log(data)
 
+            //error handler
             if(data.errors){
                 emailError.textContent = data.errors.email
                 passwordError.textContent = data.errors.password
             }
-
+            //hvis finner user så redirect
             if(data.user) {
                 location.assign('/')
             }

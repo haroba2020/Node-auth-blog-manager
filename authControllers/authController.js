@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 
 // error handler
 const ErrorHandler = (err) => {
+
     let errors = {email:'',password:'',name:''};
     console.log(err.code)
 
@@ -16,7 +17,7 @@ const ErrorHandler = (err) => {
     if (err.message === 'incorrect password') {
         errors.password = 'That password is incorrect';
     }
-
+    // går gjennom vær error melding med "user validation failed" og retunerer de
     if(err.message.includes('user validation failed:')){
         Object.values(err.errors).forEach((properties)=>{
             errors[properties.path] = properties.message
@@ -28,6 +29,7 @@ const ErrorHandler = (err) => {
     return errors
 }
 
+// Enkle get requests
 module.exports.signup_get = (req,res)=>{
     res.render('signup');
 }
@@ -38,6 +40,8 @@ module.exports.login_get = (req,res)=>{
 module.exports.blog_create_get = (req,res)=>{
     res.render('create');
 }
+
+// get request som ser etter /blog id ved bruk av req.params.id derreter så finner den en spesifik blog ved bruk av id og sender den tilbake til siden
 module.exports.blog_details = (req,res) => {
     const id = req.params.id
     Blog.findById(id)
@@ -51,6 +55,7 @@ module.exports.blog_details = (req,res) => {
 
 const maxAge = 3* 24 * 60 * 60 
 
+//en jwt cookie som tar in user id som lagres for senere bruk
 const createToken = (id) => {
     return jwt.sign({ id }, 'hrobos secret', {
         expiresIn: maxAge
@@ -60,8 +65,10 @@ const createToken = (id) => {
 module.exports.login_post = async (req,res)=>{
     const {email, password} = req.body
     try {
+        //Logger inn user og lager en cookie med user id
         const user = await User.login(email,password)
         const token = createToken(user._id)
+
         res.cookie('jwt',token, {httpOnly:true, maxAge: maxAge * 1000})
         res.status(200).json({user: user._id})
 
@@ -73,10 +80,12 @@ module.exports.login_post = async (req,res)=>{
     }
 }
 
+
 module.exports.signup_post = async (req,res)=>{
     const {email, password, name} = req.body
     console.log(req.body)
     try {
+        //lager en user og en cookie med user id
         const user = await User.create({email,password,name})
         const token = createToken(user._id)
         res.cookie('jwt',token, {httpOnly:true, maxAge: maxAge * 1000})
@@ -90,23 +99,14 @@ module.exports.signup_post = async (req,res)=>{
     }
 }
 
+//en get request som fjerner cookien for å kunne logge seg ut og umidelbart redirecter deg til index
 module.exports.logout_get = (req, res) => {
     res.cookie('jwt', '',{maxAge: 1 })
     res.redirect('/')
 }
 
-module.exports.blog_index = (req,res) =>{
-    Blog.find().sort({ createdAt: -1})
-    .then((result)=>{
-        res.render('blog/index', {title: 'All blogs', blogs: result})
-    })
-    .catch((err)=>{
-        console.log(err)
-    })
-}
-
+//en post request som lagrer en blog
 module.exports.blog_create_post = (req, res) =>{
-    console.log(req.body)
     const blog = new Blog(req.body)   
     
     blog.save()
@@ -118,6 +118,7 @@ module.exports.blog_create_post = (req, res) =>{
         res.redirect('404')
     })
 }
+//delete request som finner id til en blog og fjerner den basert på det
 module.exports.blog_delete = (req, res) =>{
     const id = req.params.id
 

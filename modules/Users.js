@@ -35,11 +35,13 @@ userSchema.post('save', function(doc, next){
 
 //method to log in User
 
+// metode som sjekker email og passord for å authentisere bruker
 userSchema.statics.login = async function(email,password){
     const user = await this.findOne({email})
     if(user){
         const auth = await bcrypt.compare(password,user.password)
         if(auth){
+            //retunerer brukeren etter alt er bekrefter
             return user
         }
         throw Error ('incorrect password')
@@ -47,9 +49,7 @@ userSchema.statics.login = async function(email,password){
     throw Error ('incorrect email')
 }
 
-userSchema.sort = async function(){
-    const userCollection = this.find() 
-}
+
 const User = mongoose.model('user',userSchema)
 
 module.exports = User

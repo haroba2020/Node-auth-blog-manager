@@ -160,3 +160,11 @@ textarea{
   font-size: 1.2em;
   cursor: pointer;
 }
+footer{
+  color: #777;
+  text-align: center;
+  clear: both;
+  position: relative;
+  height: -200px;
+  margin-top: px;
+}

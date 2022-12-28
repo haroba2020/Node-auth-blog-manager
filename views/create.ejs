@@ -3,6 +3,7 @@
 
 <div class="create-blog content">
     <form>
+        <!-- Istedet for å skrive ned emailen så sjekker den user.email istedet -->
       <input type="hidden" id="email" name="email" value= <%= user.email %> >
       <label for="title">Blog title:</label>
       <input type="text" id="title" name="title" required>
@@ -12,8 +13,10 @@
       <textarea id="body" name="body" required></textarea>
       <button>Submit</button>
     </form>
-</div>
+</div> 
 
+
+<!-- script som tar inn veridene til formen for å sende som en post request -->
 <script>
     const form = document.querySelector('form')
 

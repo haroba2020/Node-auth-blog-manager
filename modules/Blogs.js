@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-
+//enkel schema for å lage blogs
 const blogSchema = new Schema({
     email: {
         type:String,
